@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, redirect
 import smtplib
 from email.message import EmailMessage
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -15,8 +20,8 @@ def send():
     subject = request.form['subject']
     message = request.form['message']
 
-    email_user = 'ksainath23102003@gmail.com'
-    email_pass = 'rzgc bwcl vgqe wuty'
+    email_user = os.environ.get('EMAIL_USER')
+    email_pass = os.environ.get('EMAIL_PASS')
 
     msg = EmailMessage()
     msg['Subject'] = f"🔔 New Contact Request - {subject}"
