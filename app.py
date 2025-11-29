@@ -3,9 +3,13 @@ import smtplib
 from email.message import EmailMessage
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -119,9 +123,11 @@ def send():
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(email_user, email_pass)
             smtp.send_message(msg)
+        app.logger.info(f"Email sent successfully from {email}")
         return redirect('/')
     except Exception as e:
-        return f"Error: {str(e)}"
+        app.logger.exception("Failed to send email")
+        return "Failed to send message. Check server logs.", 500
 
 if __name__ == '__main__':
     app.run()
